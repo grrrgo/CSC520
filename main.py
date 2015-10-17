@@ -1,3 +1,103 @@
-'''
-This will be the entry of project
-'''
+from tkinter import *
+from tkinter import messagebox
+import random
+
+
+class Game:
+    def __init__(self):
+        self.root = Tk()
+        self.listOfCards = [i for i in range(8)]+[i for i in range(8)]
+        random.shuffle(self.listOfCards)
+        self.listOfCards = [self.listOfCards[x:x+4] for x in range(0, 16, 4)]
+        print(self.listOfCards)
+        self.matrix = {}
+        self.shown = []
+        self.click = 0
+        self.numberLeft = 8
+        self.sec = 30
+        self.back = PhotoImage(file='./imgs/back.gif')
+        self.blank = PhotoImage(file='./imgs/blank.gif')
+        for r in range(4):
+            for c in range(4):
+                position = str(r) + str(c)
+                # photo = PhotoImage(file='./'+str(self.listOfCards[r][c])+'.gif')
+                self.matrix[position] = Label(self.root, image=self.back, borderwidth=2)
+                self.matrix[position].position = position
+                self.matrix[position].photo = self.back
+                self.matrix[position].file = str(self.listOfCards[r][c])
+                self.matrix[position].show = False
+                self.matrix[position].bind("<Button-1>", self.callback)
+                self.matrix[position].grid(row=r, column=c)
+
+        Label(self.root, text='Time Left:').grid(row=5, column=1, columnspan=2)
+        self.time = Label(self.root, text='time')
+        self.time.grid(row=5, column=2, columnspan=2)
+        self.tick()
+        self.root.mainloop()
+
+    def callback(self, event):
+        card = event.widget
+        if card.show:
+            return
+        if len(self.shown) == 0:
+            self.shown.append(card)
+            pic = PhotoImage(file='./imgs/' + card.file + '.gif')
+            card.configure(image=pic)
+            card.pic = pic
+            card.show = True
+        elif len(self.shown) == 1:
+            if self.shown[0].file == card.file:
+                card.configure(image=self.blank)
+                self.numberLeft -= 1
+                card.show = True
+                self.matrix[self.shown[0].position].configure(image=self.blank)
+                self.matrix[self.shown[0].position].show = True
+                del self.shown[0]
+            else:
+                self.shown.append(card)
+                pic = PhotoImage(file='./imgs/' + card.file + '.gif')
+                self.matrix[self.shown[0].position].show = True
+                card.configure(image=pic)
+                card.pic = pic
+                card.show = True
+        elif len(self.shown) == 2:
+            if card.file == self.shown[0].file:
+                card.configure(image=self.blank)
+                self.numberLeft -= 1
+                card.show = True
+                self.matrix[self.shown[0].position].configure(image=self.blank)
+                self.matrix[self.shown[0].position].show = True
+                del self.shown[0]
+            elif card.file == self.shown[1].file:
+                card.configure(image=self.blank)
+                self.numberLeft -= 1
+                card.show = True
+                self.matrix[self.shown[1].position].configure(image=self.blank)
+                self.matrix[self.shown[1].position].show = True
+                del self.shown[1]
+            else:
+                self.shown.append(card)
+                self.matrix[self.shown[0].position].configure(image=self.back)
+                self.matrix[self.shown[0].position].show = False
+                del self.shown[0]
+                pic = PhotoImage(file='./imgs/' + card.file + '.gif')
+                card.configure(image=pic)
+                card.pic = pic
+                card.show = True
+        self.isDone()
+
+    def isDone(self):
+        if self.numberLeft == 0:
+            messagebox.showinfo("Game", "Congrats! You won!")
+            self.root.destroy()
+
+    def tick(self):
+        if self.sec != 0:
+            self.sec -= 1
+            self.time['text'] = self.sec
+            self.time.after(1000, self.tick)
+        else:
+            messagebox.showinfo("Game", "Times up!")
+            self.root.destroy()
+
+game = Game()
