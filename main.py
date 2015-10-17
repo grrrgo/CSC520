@@ -32,6 +32,12 @@ class Game:
         Label(self.root, text='Time Left:').grid(row=5, column=1, columnspan=2)
         self.time = Label(self.root, text='time')
         self.time.grid(row=5, column=2, columnspan=2)
+        self.root.withdraw()
+        self.root.update_idletasks()
+        x = (self.root.winfo_screenwidth() - self.root.winfo_reqwidth()) / 2
+        y = (self.root.winfo_screenheight() - self.root.winfo_reqheight()) / 2
+        self.root.geometry("+%d+%d" % (x, y))
+        self.root.deiconify()
         self.tick()
         self.root.mainloop()
 
@@ -47,12 +53,19 @@ class Game:
             card.show = True
         elif len(self.shown) == 1:
             if self.shown[0].file == card.file:
-                card.configure(image=self.blank)
                 self.numberLeft -= 1
+
+                def handle():
+                    card.configure(image=self.blank)
+                    card.show = True
+                    self.matrix[self.shown[0].position].configure(image=self.blank)
+                    self.matrix[self.shown[0].position].show = True
+                    del self.shown[0]
+                pic = PhotoImage(file='./imgs/' + card.file + '.gif')
+                card.configure(image=pic)
+                card.pic = pic
                 card.show = True
-                self.matrix[self.shown[0].position].configure(image=self.blank)
-                self.matrix[self.shown[0].position].show = True
-                del self.shown[0]
+                card.after(300, handle)
             else:
                 self.shown.append(card)
                 pic = PhotoImage(file='./imgs/' + card.file + '.gif')
@@ -62,19 +75,33 @@ class Game:
                 card.show = True
         elif len(self.shown) == 2:
             if card.file == self.shown[0].file:
-                card.configure(image=self.blank)
                 self.numberLeft -= 1
+
+                def handle():
+                    card.configure(image=self.blank)
+                    card.show = True
+                    self.matrix[self.shown[0].position].configure(image=self.blank)
+                    self.matrix[self.shown[0].position].show = True
+                    del self.shown[0]
+                pic = PhotoImage(file='./imgs/' + card.file + '.gif')
+                card.configure(image=pic)
+                card.pic = pic
                 card.show = True
-                self.matrix[self.shown[0].position].configure(image=self.blank)
-                self.matrix[self.shown[0].position].show = True
-                del self.shown[0]
+                card.after(300, handle)
             elif card.file == self.shown[1].file:
-                card.configure(image=self.blank)
                 self.numberLeft -= 1
+
+                def handle():
+                    card.configure(image=self.blank)
+                    card.show = True
+                    self.matrix[self.shown[1].position].configure(image=self.blank)
+                    self.matrix[self.shown[1].position].show = True
+                    del self.shown[1]
+                pic = PhotoImage(file='./imgs/' + card.file + '.gif')
+                card.configure(image=pic)
+                card.pic = pic
                 card.show = True
-                self.matrix[self.shown[1].position].configure(image=self.blank)
-                self.matrix[self.shown[1].position].show = True
-                del self.shown[1]
+                card.after(300, handle)
             else:
                 self.shown.append(card)
                 self.matrix[self.shown[0].position].configure(image=self.back)
