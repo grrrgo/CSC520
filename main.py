@@ -1,6 +1,18 @@
 from tkinter import *
 from tkinter import messagebox
 import random
+try:
+    import winsound
+
+    def play():
+        winsound.PlaySound("song.wav", winsound.SND_FILENAME)
+except ImportError:
+    import os
+
+    def play():
+        os.system("afplay ./song.wav")
+
+
 
 
 class Game:
@@ -45,13 +57,16 @@ class Game:
         card = event.widget
         if card.show:
             return
+        
         if len(self.shown) == 0:
             self.shown.append(card)
             pic = PhotoImage(file='./imgs/' + card.file + '.gif')
             card.configure(image=pic)
             card.pic = pic
             card.show = True
+            
         elif len(self.shown) == 1:
+        
             if self.shown[0].file == card.file:
                 self.numberLeft -= 1
 
@@ -61,11 +76,14 @@ class Game:
                     self.matrix[self.shown[0].position].configure(image=self.blank)
                     self.matrix[self.shown[0].position].show = True
                     del self.shown[0]
+                    play()
+
                 pic = PhotoImage(file='./imgs/' + card.file + '.gif')
                 card.configure(image=pic)
                 card.pic = pic
                 card.show = True
                 card.after(300, handle)
+
             else:
                 self.shown.append(card)
                 pic = PhotoImage(file='./imgs/' + card.file + '.gif')
@@ -73,6 +91,7 @@ class Game:
                 card.configure(image=pic)
                 card.pic = pic
                 card.show = True
+
         elif len(self.shown) == 2:
             if card.file == self.shown[0].file:
                 self.numberLeft -= 1
@@ -83,11 +102,14 @@ class Game:
                     self.matrix[self.shown[0].position].configure(image=self.blank)
                     self.matrix[self.shown[0].position].show = True
                     del self.shown[0]
+                    play()
+
                 pic = PhotoImage(file='./imgs/' + card.file + '.gif')
                 card.configure(image=pic)
                 card.pic = pic
                 card.show = True
                 card.after(300, handle)
+                
             elif card.file == self.shown[1].file:
                 self.numberLeft -= 1
 
@@ -97,11 +119,14 @@ class Game:
                     self.matrix[self.shown[1].position].configure(image=self.blank)
                     self.matrix[self.shown[1].position].show = True
                     del self.shown[1]
+                    play()
+
                 pic = PhotoImage(file='./imgs/' + card.file + '.gif')
                 card.configure(image=pic)
                 card.pic = pic
                 card.show = True
                 card.after(300, handle)
+
             else:
                 self.shown.append(card)
                 self.matrix[self.shown[0].position].configure(image=self.back)
@@ -111,6 +136,7 @@ class Game:
                 card.configure(image=pic)
                 card.pic = pic
                 card.show = True
+                
         self.isDone()
 
     def isDone(self):
