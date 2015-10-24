@@ -10,7 +10,7 @@ except ImportError:
     import os
 
     def play():
-        os.system("afplay ./song.wav")
+        os.system("afplay ./song.wav &")
 
 
 
