@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import messagebox
 import random
+import constants
 try:
     import winsound
 
@@ -11,8 +12,6 @@ except ImportError:
 
     def play():
         os.system("afplay ./song.wav &")
-
-
 
 
 class Game:
@@ -27,8 +26,9 @@ class Game:
         self.click = 0
         self.numberLeft = 8
         self.sec = 30
-        self.back = PhotoImage(file='./imgs/back.gif')
-        self.blank = PhotoImage(file='./imgs/blank.gif')
+        self.done = False
+        self.back = PhotoImage(data=constants.back)
+        self.blank = PhotoImage(data=constants.blank)
         for r in range(4):
             for c in range(4):
                 position = str(r) + str(c)
@@ -41,9 +41,9 @@ class Game:
                 self.matrix[position].bind("<Button-1>", self.callback)
                 self.matrix[position].grid(row=r, column=c)
 
-        Label(self.root, text='Time Left:').grid(row=5, column=1, columnspan=2)
+        Label(self.root, text='Time Left:').grid(row=6, column=1, columnspan=2)
         self.time = Label(self.root, text='time')
-        self.time.grid(row=5, column=2, columnspan=2)
+        self.time.grid(row=6, column=2, columnspan=2)
         self.root.withdraw()
         self.root.update_idletasks()
         x = (self.root.winfo_screenwidth() - self.root.winfo_reqwidth()) / 2
@@ -141,16 +141,20 @@ class Game:
 
     def isDone(self):
         if self.numberLeft == 0:
+            self.done = True
             messagebox.showinfo("Game", "Congrats! You won!")
             self.root.destroy()
 
     def tick(self):
-        if self.sec != 0:
-            self.sec -= 1
-            self.time['text'] = self.sec
-            self.time.after(1000, self.tick)
+        if not self.done:
+            if self.sec != 0:
+                self.sec -= 1
+                self.time['text'] = self.sec
+                self.time.after(1000, self.tick)
+            else:
+                messagebox.showinfo("Game", "Times up!")
+                self.root.destroy()
         else:
-            messagebox.showinfo("Game", "Times up!")
-            self.root.destroy()
+            return
 
 game = Game()
