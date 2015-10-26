@@ -142,8 +142,8 @@ class Game:
     def isDone(self):
         if self.numberLeft == 0:
             self.done = True
-            messagebox.showinfo("Game", "Congrats! You won!")
-            self.root.destroy()
+            isPlayAgain= messagebox.askyesno("Game", "Congrats! You won! Do You want to play again?")
+            self.playAgain(isPlayAgain)
 
     def tick(self):
         if not self.done:
@@ -152,9 +152,16 @@ class Game:
                 self.time['text'] = self.sec
                 self.time.after(1000, self.tick)
             else:
-                messagebox.showinfo("Game", "Times up!")
-                self.root.destroy()
+                isPlayAgain= messagebox.askyesno("Game", "Times up! Do You want to play again?")
+                self.playAgain(isPlayAgain)
         else:
             return
+
+    def playAgain(self, isPlayAgain):
+        if isPlayAgain:
+            self.root.destroy()
+            game = Game()
+        else:
+            self.root.destroy()
 
 game = Game()
