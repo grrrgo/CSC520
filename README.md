@@ -6,6 +6,7 @@ A Python Flip Card Memory Game
 
 Chen<br/>
 Deepika<br/>
+Deesha<br/>
 Tejaswini<br/>
 Megha<br/>
 Chunhua<br/>
