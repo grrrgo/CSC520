@@ -1,3 +1,18 @@
+## =============================
+## main.py
+## authors:
+##           Chen Zhang
+##           Deepika Vinodkumar
+##           Deesha Shingadia
+##           Tejaswini Koduru
+##           Megha Dhoke
+##           Chunhua Yang
+##           Kalyan Kumar Yalagandula
+## date: Nov. 1st 2015
+## version: 1
+## class: Python Fall 2015, Dr. Riehle
+
+
 from tkinter import *
 from tkinter import messagebox
 import random
@@ -17,6 +32,7 @@ except ImportError:
 class Game:
     def __init__(self):
         self.root = Tk()
+        self.root.wm_title("Game")
         self.listOfCards = [i for i in range(8)]+[i for i in range(8)]
         random.shuffle(self.listOfCards)
         self.listOfCards = [self.listOfCards[x:x+4] for x in range(0, 16, 4)]
@@ -34,8 +50,8 @@ class Game:
                 position = str(r) + str(c)
                 # photo = PhotoImage(file='./'+str(self.listOfCards[r][c])+'.gif')
                 self.matrix[position] = Label(self.root, image=self.back, borderwidth=2)
-                self.matrix[position].position = position
                 self.matrix[position].photo = self.back
+                self.matrix[position].position = position
                 self.matrix[position].file = str(self.listOfCards[r][c])
                 self.matrix[position].show = False
                 self.matrix[position].bind("<Button-1>", self.callback)
@@ -55,6 +71,7 @@ class Game:
 
     def callback(self, event):
         card = event.widget
+        print(card)
         if card.show:
             return
         
